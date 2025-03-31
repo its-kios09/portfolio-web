@@ -14,12 +14,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Remove trailing whitespace
+      - name: Clean up HTML files
         run: |
-          # Remove trailing whitespace from all files
-          find . -type f -name "*.html" -exec sed -i 's/[[:space:]]*$//' {} \;
-          find . -type f -name "*.css" -exec sed -i 's/[[:space:]]*$//' {} \;
-          find . -type f -name "*.js" -exec sed -i 's/[[:space:]]*$//' {} \;
+          # Remove trailing whitespace and fix void elements
+          find . -type f -name "*.html" -exec sed -i \
+            -e 's/[[:space:]]*$//' \
+            -e 's/\(<meta[^>]*\)\/>/\1>/g' \
+            -e 's/\(<link[^>]*\)\/>/\1>/g' \
+            -e 's/\(<img[^>]*\)\/>/\1>/g' \
+            -e 's/\(<input[^>]*\)\/>/\1>/g' \
+            -e 's/\(<br[^>]*\)\/>/\1>/g' \
+            {} \;
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -31,7 +36,7 @@ jobs:
           npm install --save-dev html-validate stylelint stylelint-config-standard eslint eslint-config-standard
 
       - name: Validate HTML
-        run: npx html-validate "index.html"
+        run: npx html-validate "**/*.html"
 
       - name: Validate CSS
         run: |
@@ -66,12 +71,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Remove trailing whitespace
+      - name: Clean files before deployment
         run: |
-          # Ensure no trailing whitespace before deployment
-          find . -type f -name "*.html" -exec sed -i 's/[[:space:]]*$//' {} \;
-          find . -type f -name "*.css" -exec sed -i 's/[[:space:]]*$//' {} \;
-          find . -type f -name "*.js" -exec sed -i 's/[[:space:]]*$//' {} \;
+          find . -type f -name "*.html" -exec sed -i \
+            -e 's/[[:space:]]*$//' \
+            -e 's/\(<meta[^>]*\)\/>/\1>/g' \
+            -e 's/\(<link[^>]*\)\/>/\1>/g' \
+            {} \;
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v2
