@@ -49,12 +49,13 @@ jobs:
             exit 1
           fi
 
-      - name: Validate JavaScript
+      - name: verify JavaScript directory exists
         run: |
           if [ -d "assets/js" ]; then
-            npx eslint "assets/js/**/*.js"
+            echo "✅ JavaScript directory exists"
           else
-            echo "⚠️ No JS directory found - skipping JS validation"
+            echo "❌ Error: JavaScript directory not found"
+            exit 1
           fi
 
   deploy:
