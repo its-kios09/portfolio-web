@@ -1,0 +1,46 @@
+name: Deploy Portfolio
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate HTML, CSS, and JavaScript
+        run: |
+          npx html-validate "index.html"
+          npx stylelint "assets/css/**/*.css"
+          npx eslint "assets/js/**/*.js"
+
+      - name: Ensure required files exist
+        run: |
+          test -f index.html || (echo "Missing index.html" && exit 1)
+          test -d assets/css || (echo "Missing assets/css directory" && exit 1)
+          test -d assets/js || (echo "Missing assets/js directory" && exit 1)
+          test -d assets/images || (echo "Missing assets/images directory" && exit 1)
+          test -f assets/resume.pdf || (echo "Missing resume.pdf" && exit 1)
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v2
+        with:
+          publish-dir: ./
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
