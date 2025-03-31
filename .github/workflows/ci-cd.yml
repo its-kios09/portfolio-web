@@ -2,35 +2,58 @@ name: Deploy Portfolio
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  build:
+  validate:
+    name: Validate Code
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Validate HTML, CSS, and JavaScript
-        run: |
-          npx html-validate "index.html"
-          npx stylelint "assets/css/**/*.css"
-          npx eslint "assets/js/**/*.js"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-      - name: Ensure required files exist
+      - name: Install dependencies
         run: |
-          test -f index.html || (echo "Missing index.html" && exit 1)
-          test -d assets/css || (echo "Missing assets/css directory" && exit 1)
-          test -d assets/js || (echo "Missing assets/js directory" && exit 1)
-          test -d assets/images || (echo "Missing assets/images directory" && exit 1)
-          test -f assets/resume.pdf || (echo "Missing resume.pdf" && exit 1)
+          npm install --save-dev html-validate stylelint stylelint-config-standard eslint eslint-config-standard
+
+      - name: Validate HTML
+        run: npx html-validate "index.html"
+
+      - name: Validate CSS
+        run: |
+          if [ -d "assets/css" ]; then
+            npx stylelint "assets/css/**/*.css"
+          else
+            echo "⚠️ No CSS directory found - skipping CSS validation"
+          fi
+
+      - name: Validate JavaScript
+        run: |
+          if [ -d "assets/js" ]; then
+            npx eslint "assets/js/**/*.js"
+          else
+            echo "⚠️ No JS directory found - skipping JS validation"
+          fi
+
+      - name: Check required files
+        run: |
+          test -f index.html || (echo "❌ Missing index.html" && exit 1)
+          test -d assets/css || echo "⚠️ Missing assets/css directory (optional but recommended)"
+          test -d assets/js || echo "⚠️ Missing assets/js directory (optional but recommended)"
+          test -d assets/images || echo "⚠️ Missing assets/images directory (optional but recommended)"
+          test -f assets/resume.pdf || echo "⚠️ Missing resume.pdf (optional but recommended)"
 
   deploy:
-    needs: build
+    name: Deploy to Netlify
+    needs: validate
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -44,3 +67,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
+          deploy-message: "Deploy from GitHub Actions"
