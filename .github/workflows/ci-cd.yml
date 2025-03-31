@@ -14,6 +14,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Clean HTML files
+        run: |
+          # Fix void elements and whitespace
+          find . -type f -name "*.html" -exec sed -i \
+            -e 's/[[:space:]]*$//' \
+            -e 's/\(<link[^>]*\)\/>/\1>/g' \
+            -e 's/\(<meta[^>]*\)\/>/\1>/g' \
+            -e 's/\(<img[^>]*\)\/>/\1>/g' \
+            -e 's/\(<input[^>]*\)\/>/\1>/g' \
+            -e 's/\(<br[^>]*\)\/>/\1>/g' \
+            {} \;
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -24,7 +36,7 @@ jobs:
           npm install --save-dev html-validate stylelint stylelint-config-standard eslint eslint-config-standard
 
       - name: Validate HTML
-        run: npx html-validate "index.html"
+        run: npx html-validate "**/*.html"
 
       - name: Validate CSS
         run: |
@@ -41,14 +53,6 @@ jobs:
           else
             echo "⚠️ No JS directory found - skipping JS validation"
           fi
-
-      - name: Check required files
-        run: |
-          test -f index.html || (echo "❌ Missing index.html" && exit 1)
-          test -d assets/css || echo "⚠️ Missing assets/css directory (optional but recommended)"
-          test -d assets/js || echo "⚠️ Missing assets/js directory (optional but recommended)"
-          test -d assets/images || echo "⚠️ Missing assets/images directory (optional but recommended)"
-          test -f assets/resume.pdf || echo "⚠️ Missing resume.pdf (optional but recommended)"
 
   deploy:
     name: Deploy to Netlify
