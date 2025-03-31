@@ -2,7 +2,8 @@
 
 Welcome to my professional portfolio! This website showcases my skills, projects, and experiences as a developer. Built with **HTML, CSS, and a touch of JavaScript**, it reflects my passion for clean, responsive design and functional web development.  
 
-🔗 **Live Demo:**  
+🔗 **Live Demo:** [Checkout here](https://itskios09.netlify.app/)
+
 
 ---
 
@@ -10,7 +11,7 @@ Welcome to my professional portfolio! This website showcases my skills, projects
 
 ✅ **Modern & Responsive Design** – Works seamlessly on all devices.  
 ✅ **Interactive Elements** – Smooth animations and dynamic content.  
-✅ **Project Showcase** – Highlighting my best work with live demos and GitHub links.  
+✅ **Project Showcase** – Highlighting my best work with live demos.  
 ✅ **Contact Form** – Easy way for recruiters and collaborators to reach out.  
 ✅ **Downloadable Resume** – Quick access to my professional background.  
 
@@ -36,9 +37,11 @@ portfolio-web/
 │   ├── js/             # JavaScript files
 │   ├── images/         # Project & profile images
 │   └── resume.pdf      # Downloadable CV
+├── .github/
+│   ├── workflows/
+│   │   ├── ci-cd.yml   # CI/CD workflow file
 ├── README.md           # This file
 ```
-
 ---
 
 ## 🔥 How to Run Locally  
