@@ -14,6 +14,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Remove trailing whitespace
+        run: |
+          # Remove trailing whitespace from all files
+          find . -type f -name "*.html" -exec sed -i 's/[[:space:]]*$//' {} \;
+          find . -type f -name "*.css" -exec sed -i 's/[[:space:]]*$//' {} \;
+          find . -type f -name "*.js" -exec sed -i 's/[[:space:]]*$//' {} \;
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -58,6 +65,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Remove trailing whitespace
+        run: |
+          # Ensure no trailing whitespace before deployment
+          find . -type f -name "*.html" -exec sed -i 's/[[:space:]]*$//' {} \;
+          find . -type f -name "*.css" -exec sed -i 's/[[:space:]]*$//' {} \;
+          find . -type f -name "*.js" -exec sed -i 's/[[:space:]]*$//' {} \;
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v2
