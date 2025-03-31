@@ -1,5 +1,5 @@
 /* font family import */
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Slab:wght@100;300;400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Slab:wght@100;300;400&display=swap");
 
 /* Variables css */
 :root {
@@ -29,7 +29,7 @@
   --dark-container-color: hsl(var(--hue-color) 29% 16%);
 
   /* Font and Typography */
-  --body-font: 'Josefin Slab', serif;
+  --body-font: "Josefin Slab", serif;
 
   /* Font size */
   --big-font-size: 2rem;
@@ -104,7 +104,10 @@ body {
   transition: 0.4s; /* For animation dark mode */
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   color: var(--title-color);
   font-weight: var(--font-semi-bold);
 }
@@ -216,7 +219,7 @@ img {
     border-radius: 0 0 1.5rem 1.5rem;
     transition: 0.3s;
   }
-  
+
   .nav__list {
     grid-template-columns: 1fr;
     gap: 1.5rem;
@@ -284,21 +287,21 @@ img {
   .nav {
     padding: 0 2rem;
   }
-  
+
   .nav__menu {
     margin-left: auto;
   }
-  
+
   .nav__list {
     display: flex;
     gap: 2rem;
   }
-  
-  .nav__toggle, 
+
+  .nav__toggle,
   .nav__close {
     display: none;
   }
-  
+
   .nav__icon {
     margin-right: 0.5rem;
   }
