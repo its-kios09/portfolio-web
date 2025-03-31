@@ -14,18 +14,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Clean HTML files
-        run: |
-          # Fix void elements and whitespace
-          find . -type f -name "*.html" -exec sed -i \
-            -e 's/[[:space:]]*$//' \
-            -e 's/\(<link[^>]*\)\/>/\1>/g' \
-            -e 's/\(<meta[^>]*\)\/>/\1>/g' \
-            -e 's/\(<img[^>]*\)\/>/\1>/g' \
-            -e 's/\(<input[^>]*\)\/>/\1>/g' \
-            -e 's/\(<br[^>]*\)\/>/\1>/g' \
-            {} \;
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -33,7 +21,21 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install --save-dev html-validate stylelint stylelint-config-standard eslint eslint-config-standard
+          npm install --save-dev \
+            html-validate \
+            stylelint \
+            stylelint-config-standard \
+            eslint \
+            eslint-config-standard
+
+      - name: Fix HTML formatting
+        run: |
+          find . -type f -name "*.html" -exec sed -i \
+            -e 's/[[:space:]]*$//' \
+            -e 's/\(<link[^>]*\)\/>/\1>/g' \
+            -e 's/\(<meta[^>]*\)\/>/\1>/g' \
+            -e 's/\(<img[^>]*\)\/>/\1>/g' \
+            {} \;
 
       - name: Validate HTML
         run: npx html-validate "**/*.html"
