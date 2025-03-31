@@ -43,7 +43,6 @@ jobs:
       - name: Validate CSS
         run: |
           if [ -d "assets/css" ]; then
-            echo '{"extends":"stylelint-config-standard","rules":{"indentation":2}}' > .stylelintrc.json
             npx stylelint "assets/css/**/*.css"
           else
             echo "⚠️ No CSS directory found - skipping CSS validation"
