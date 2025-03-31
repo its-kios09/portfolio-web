@@ -15,10 +15,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install dependencies
+        run: |
+          npm install --global html-validate stylelint stylelint-config-standard eslint eslint-config-standard
+
       - name: Validate HTML, CSS, and JavaScript
         run: |
           npx html-validate "index.html"
-          npx stylelint "assets/css/**/*.css"
+          npx stylelint "assets/css/**/*.css" --config=node_modules/stylelint-config-standard
           npx eslint "assets/js/**/*.js"
 
       - name: Ensure required files exist
